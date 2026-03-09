@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ATM Machine Simulation</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at 20% 30%, #2a3a4e 0%, #0a111b 90%);
+        font-family: system-ui, sans-serif;
+        color: #eef2ff;
+      }
+      .atm {
+        width: min(360px, 90vw);
+        padding: 26px;
+        border-radius: 16px;
+        background: linear-gradient(
+          145deg,
+          rgba(32, 40, 55, 0.95),
+          rgba(15, 18, 26, 0.9)
+        );
+        box-shadow:
+          0 18px 40px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+      .atm h1 {
+        margin: 0 0 14px;
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+        opacity: 0.85;
+      }
+      .balance {
+        margin: 0 0 22px;
+        padding: 16px 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 2rem;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      button {
+        flex: 1 1 140px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #3b5f9a, #234065);
+        color: #eef5ff;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+      }
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 24px rgba(0, 0, 0, 0.4);
+      }
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="atm">
+      <h1>ATM Balance</h1>
+      <div class="balance" id="balanceDisplay">$1,000.00</div>
+      <div class="actions">
+        <button id="withdrawBtn">Withdraw</button>
+        <button id="depositBtn">Deposit</button>
+      </div>
+    </div>
+
+    <script>
+      const balanceDisplay = document.getElementById("balanceDisplay");
+      const withdrawBtn = document.getElementById("withdrawBtn");
+      const depositBtn = document.getElementById("depositBtn");
+
+      let balance = 1000;
+
+      const format = (value) =>
+        "$" + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      const updateDisplay = () => {
+        balanceDisplay.textContent = format(balance);
+      };
+
+      const requestAmount = (action) => {
+        const input = prompt(`Enter amount to ${action}:`, "0");
+        if (input === null) return null;
+        const amount = parseFloat(input.replace(/[^0-9.]/g, ""));
+        if (Number.isNaN(amount) || amount <= 0) {
+          alert("Please enter a valid positive amount.");
+          return null;
+        }
+        return amount;
+      };
+
+      withdrawBtn.addEventListener("click", () => {
+        const amount = requestAmount("withdraw");
+        if (amount === null) return;
+        if (amount > balance) {
+          alert("Insufficient funds.");
+          return;
+        }
+        balance -= amount;
+        updateDisplay();
+      });
+
+      depositBtn.addEventListener("click", () => {
+        const amount = requestAmount("deposit");
+        if (amount === null) return;
+        balance += amount;
+        updateDisplay();
+      });
+
+      updateDisplay();
+    </script>
+  </body>
+</html>
